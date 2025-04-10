@@ -1,0 +1,10 @@
+
+*.out
+*.log
+.idea/
+.vscode/
+.scannerwork/
+vendor/
+docker/
+goarch
+config/files/dev.yaml

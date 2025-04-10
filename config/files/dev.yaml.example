@@ -1,0 +1,13 @@
+Service:
+  Name: "gocarch-svc"
+  
+Server:
+  Port: ":8000"
+  GracefulTimeout: 3s
+  ReadTimeout: 10s
+  WriteTimeout: 10s
+
+InternalAPI:
+  BasePath: "/api"
+  APITimeout: 300
+  EnableSwagger: true
