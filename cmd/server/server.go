@@ -2,6 +2,7 @@ package server
 
 import (
 	"gocarch/config"
+	"gocarch/internal/handler"
 	"os"
 	"os/signal"
 	"syscall"
@@ -40,13 +41,23 @@ func run(cmd *cobra.Command, args []string) error {
 
 	opentracing.SetGlobalTracer(tracer)
 
+	container := newContainer(&opts{
+		Config: cfg,
+	})
+
+	server := handler.New(&handler.Options{
+		Config: container.Config,
+	})
+
+	go server.Run()
+
 	term := make(chan os.Signal, 1)
 	signal.Notify(term, os.Interrupt, syscall.SIGTERM)
 	select {
 	case <-term:
 		log.Infoln("Exiting gracefully...")
-		// case err := <-server.ListenError():
-		// 	log.Errorln("Error starting web server, exiting gracefully:", err)
+	case err := <-server.ListenError():
+		log.Errorln("Error starting web server, exiting gracefully:", err)
 	}
 
 	return nil
